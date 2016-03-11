@@ -187,6 +187,7 @@ export default class InputBase extends React.Component {
       let obj = {
         attrs: prev.attrs.merge.apply(prev.attrs, opts)
       };
+
       obj.attrs = obj.attrs.update('data-serial', v => this.serialize(obj.attrs));
       obj.error = this._hasMounted ? this.validate(obj.attrs.toJS().value) : null;
       return obj;
@@ -236,7 +237,7 @@ export default class InputBase extends React.Component {
     let i = 0;
     let msg;
     for (; i < len; i++) {
-      if (this.validators[i].invalid(val)) {
+      if (this.validators[i].invalid(val, this.props)) {
         if (this.props.messages && this.props.messages[this.validators[i].name]) {
           msg = this.props.messages[this.validators[i].name];
         } else {

@@ -8,7 +8,14 @@
  *
  * @module validation
  */
-import _ from 'lodash';
+//only import what we need from lodash
+import isArray from 'lodash/isArray';
+import isEmpty from 'lodash/isEmpty';
+import isObject from 'lodash/isObject';
+import isNull from 'lodash/isNull';
+import isUndefined from 'lodash/isUndefined';
+import isNumber from 'lodash/isNumber';
+
 import { Map } from 'immutable';
 
 const _isSupplied = function(val) {
@@ -16,19 +23,25 @@ const _isSupplied = function(val) {
   if (val && val.size && val.toJS) {
     value = val.toJS();
   }
-  if (_.isArray(value) && _.isEmpty(value)) {
+  if (isArray(value) && isEmpty(value)) {
     return false;
   }
-  if (_.isObject(value) && _.isEmpty(value)) {
+  if (isObject(value) && isEmpty(value)) {
     return false;
   }
-  if (_.isNull(value) || _.isUndefined(value)) {
+  if (isNull(value) || isUndefined(value)) {
     return false;
   }
-  if (_.isNumber(value)) {
+  if (isNumber(value)) {
     return true;
   }
-  return !_.isEmpty(value);
+
+  //allow true and false value
+  if(value === true || value === false){
+    return true;
+  }
+
+  return !isEmpty(value);
 };
 
 class Validation {

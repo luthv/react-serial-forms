@@ -3,6 +3,13 @@
   "version": "1.1.5",
   "description": "A high performance form library built specifically for React using persistent immutable data.",
   "main": "./lib/index.js",
+  "files": [
+    "*.md",
+    "lib"
+  ],  
+  "directories":{
+    "lib":"./lib"
+  },
   "scripts": {
     "test": "./node_modules/.bin/mocha --require chai --growl --compilers js:babel/register tests/setup.js tests/*",
     "prepublish": "gulp"

@@ -39386,7 +39386,7 @@ var InputBase = function (_React$Component) {
   }, {
     key: 'hasError',
     value: function hasError() {
-      return this.state.error instanceof _ValidationError2.default;
+      return this.state.error && this.state.error.name == "ValidationError";
     }
 
     /**
@@ -39497,7 +39497,9 @@ var InputBase = function (_React$Component) {
           } else {
             msg = this.validators[i].message;
           }
-          return new _ValidationError2.default(msg);
+          var err = new _ValidationError2.default(msg);
+          console.log(err.name);
+          return err;
         }
       }
       if (!_validation2.default._isSupplied(val)) {
@@ -39544,13 +39546,11 @@ InputBase.propTypes = {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
 },{"./ValidationError":170,"./validation":176,"immutable":1,"react-dom":23}],170:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -39575,20 +39575,11 @@ var ValidationError = function (_Error) {
   function ValidationError(message) {
     _classCallCheck(this, ValidationError);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ValidationError).call(this));
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ValidationError).call(this, message));
 
-    Object.defineProperty(_this, 'message', {
-      value: message
-    });
+    _this.name = "ValidationError";
     return _this;
   }
-
-  _createClass(ValidationError, [{
-    key: 'name',
-    get: function get() {
-      return 'ValidationError';
-    }
-  }]);
 
   return ValidationError;
 }(Error);

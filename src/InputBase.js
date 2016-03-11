@@ -148,7 +148,7 @@ export default class InputBase extends React.Component {
    * @return {boolean} error
    */
   hasError() {
-    return this.state.error instanceof ValidationError;
+    return this.state.error && this.state.error.name == "ValidationError";
   }
 
   /**
@@ -243,7 +243,9 @@ export default class InputBase extends React.Component {
         } else {
           msg = this.validators[i].message;
         }
-        return new ValidationError(msg);
+        var err = new ValidationError(msg);
+        console.log(err.name);
+        return err;
       }
     }
     if (!validation._isSupplied(val)) {

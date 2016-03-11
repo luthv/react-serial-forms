@@ -127,7 +127,7 @@ describe('InputField', function() {
       invalid: function(value, props) {
         var compareTo = parseFloat(props['data-greater-than']);
         
-        return validation._isSupplied(value) && !isNaN(compareTo) && value > compareTo;
+        return validation._isSupplied(value) && (isNaN(compareTo) || value <= compareTo);
       },
       message: `Must be greater than value.`
     });
@@ -136,7 +136,7 @@ describe('InputField', function() {
     let input = el.querySelector('input');
 
     simulate.change(input, { target: { value: 4 }});
-    expect(el.querySelector('.err-msg').innerHTML).to.equal('Must be greater than 5.');
+    expect(el.querySelector('.err-msg').innerHTML).to.equal('Must be greater than value.');
 
     simulate.change(input, { target: { value: 6 }});
     expect(el.querySelector('.err-msg')).to.equal(null);

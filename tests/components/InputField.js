@@ -1,5 +1,6 @@
 /*eslint-env mocha */
 import chai from 'chai';
+import InputField from '../../src/fields/InputField.js';
 
 let React;
 let ReactDOM;
@@ -8,7 +9,6 @@ let expect;
 let TestUtils;
 let validation;
 
-let InputField;
 
 // Render react element into the DOM.
 const setupComponent = function(jsx) {
@@ -19,8 +19,7 @@ const setupComponent = function(jsx) {
 // Load up react since the DOM is ready.
 before(function() {
   React = require('react');
-  ReactDOM = require('react-dom');
-  InputField = require('../../src/fields/InputField.js');
+  ReactDOM = require('react-dom');  
   validation = require('../../src/validation.js');
   TestUtils = require('react-addons-test-utils');
   simulate = TestUtils.Simulate;
@@ -103,7 +102,7 @@ describe('InputField', function() {
     expect(el.querySelector('.err-msg').innerHTML).to.equal(validation.collection().get('required').message);
   });
 
-  it('should handle a customer validator', function() {
+  it('should handle a custom validator', function() {
     validation.registerValidator({
       name: 'largerThanFive',
       invalid: function(value) {
@@ -117,6 +116,27 @@ describe('InputField', function() {
 
     simulate.change(input, { target: { value: 4 }});
     expect(el.querySelector('.err-msg').innerHTML).to.equal('The field should be larger than 5.');
+
+    simulate.change(input, { target: { value: 6 }});
+    expect(el.querySelector('.err-msg')).to.equal(null);
+  });
+
+  it('should handle a validator with attributes in props', function() {
+    validation.registerValidator({
+      name: 'greaterThan',
+      invalid: function(value, props) {
+        var compareTo = parseFloat(props['data-greater-than']);
+        
+        return validation._isSupplied(value) && !isNaN(compareTo) && value > compareTo;
+      },
+      message: `Must be greater than value.`
+    });
+
+    let el = setupComponent(<InputField type='number' name='my-field' validation='greaterThan' data-greater-than={5} />);
+    let input = el.querySelector('input');
+
+    simulate.change(input, { target: { value: 4 }});
+    expect(el.querySelector('.err-msg').innerHTML).to.equal('Must be greater than 5.');
 
     simulate.change(input, { target: { value: 6 }});
     expect(el.querySelector('.err-msg')).to.equal(null);
